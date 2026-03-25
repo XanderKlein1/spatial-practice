@@ -3,9 +3,13 @@ library(Seurat)
 library(ggplot2)
 library(patchwork)
 library(dplyr)
+library(here)
 
 #Load in the data
-intestine <- readRDS("./data/intestine.rds")
+localdir <- here("data")
+intestine <- Load10X_Spatial(data.dir = localdir, bin.size = c(8,16))
+
+#We will do all analysis on the 8 um bin data
 DefaultAssay(intestine) <- "Spatial.008um"
 
 #Normalize the data with a log transform.
@@ -21,13 +25,11 @@ intestine <- FindVariableFeatures(intestine, selection.method = "vst", nfeatures
 #This is a computationally expensive algorithm, so we will have to run on the HPC and then bring the RDS back here.
 intestine <- ScaleData(intestine, features = VariableFeatures(intestine))
 intestine <- RunPCA(intestine, features = VariableFeatures(intestine))
-saveRDS(intestine, file = "./outputs/intestinePCA.rds")
 
 #We will use the first 18 PCs for downstream clustering (determined via elbow plot)
 intestine <- FindNeighbors(intestine, dims = 1:18)
 intestine <- FindClusters(intestine, resolution = 0.8)
-saveRDS(intestine, file = "./outputs/intestineClustered.rds")
 
 #Now we will run the UMAP algorithm to project our clusters into two dimensions.
 intestine <- RunUMAP(intestine, dims = 1:18)
-saveRDS(intestine, file = "./outputs/intestineUMAP.rds")
+saveRDS(intestine, file = here("data", "intestine_analysis.rds"))

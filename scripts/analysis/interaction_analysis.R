@@ -5,9 +5,11 @@ library(patchwork)
 library(dplyr)
 library(FNN)
 library(pheatmap)
+library(here)
 
 #Read in the output from the Main script.
-intestine <- readRDS("./outputs/intestineUMAP.rds")
+localdir <- here("data", "intestine_analysis.rds")
+intestine <- readRDS(localdir)
 
 coords <- GetTissueCoordinates(intestine)
 k <- 4
