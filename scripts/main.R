@@ -23,7 +23,7 @@ intestine <- readRDS(localdir)
 DefaultAssay(intestine) <- "Spatial.008um"
 
 #Preprocess the data:
-intestine <- precluster(intestine, 2000)
+intestine <- run_precluster(intestine, 2000)
 
 #Looking at the elbow plot, we can determine principal components we should use for downstream analysis.
 #In this case, it looks like the variance tapers off around 18 so we will use 18 PCs.
@@ -38,9 +38,11 @@ ggsave(filename = here("repo", "figures", "elbow_plot.pdf"),
 intestine <- cluster_umap(intestine, 18, 0.8)
 saveRDS(intestine, file = here("rds_objects", "intestine_analysis.rds"))
 
-interaction_heatmap <- interaction_analysis(intestine, 4, 250, 100)
+interaction_heatmap <- run_interaction_analysis(intestine, 4, 250, 100)
 ggsave(filename = here("repo", "figures", "interaction_heatmap.pdf"),
        plot = interaction_heatmap,
        width = 7,
        height = 5,
        dpi = 300)
+
+cluster_heatmap <- create_cluster_heatmap(intestine, n_genes = 5)

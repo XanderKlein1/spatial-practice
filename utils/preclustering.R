@@ -16,7 +16,7 @@ library(dplyr)
 
 here::i_am("repo/utils/preclustering.R")
 
-precluster <- function(object, numFeatures) {
+run_precluster <- function(object, numFeatures) {
   object <- NormalizeData(object)
   object <- FindVariableFeatures(object, selection.method = "vst", nfeatures = numFeatures)
   object <- ScaleData(object, features = VariableFeatures(object))

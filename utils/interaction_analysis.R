@@ -31,7 +31,7 @@ library(FNN)
 library(pheatmap)
 
 
-interaction_analysis <- function(object, k, max_dist, n_perm) {
+run_interaction_analysis <- function(object, k, max_dist, n_perm) {
   coords <- GetTissueCoordinates(intestine)
   
   #Find 4 nearest neighbors for each point.
@@ -143,7 +143,7 @@ interaction_analysis <- function(object, k, max_dist, n_perm) {
   score_mat <- -log10(binom_mat)*sign_mat
   
   #Final heatmap of over/under-representation in the observed model compared to the null model.
-  z_score_interaction <- pheatmap(
+  pheatmap(
     score_mat,
     cluster_rows = FALSE,
     cluster_cols = FALSE,
@@ -151,7 +151,5 @@ interaction_analysis <- function(object, k, max_dist, n_perm) {
     color = colorRampPalette(c("deepskyblue", "white", "red"))(100),
     breaks = seq(-5,5,length.out = 101)
   )
-  
-  z_score_interaction
 }
 
